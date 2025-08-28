@@ -1,0 +1,1326 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <title id="page">API RESMING</title>
+      <meta name="description" content="API RESMING adalah lightweight API untuk WhatsApp Bots dengan performa cepat, stabil, dan mudah digunakan. Dukung pengembangan kami dengan donasi!">
+      <meta property="og:title" content="API RESMING" />
+      <meta property="og:description" content="API RESMING adalah API ringan dan cepat untuk integrasi WhatsApp Bots. Cocok untuk developer yang butuh solusi efisien. Dukung kami dengan donasi untuk pengembangan lebih lanjut!" />
+      <meta property="og:image" content="https://img1.pixhost.to/images/7125/620815169_desta.jpg" />
+      <meta property="og:url" content="https://api.nvidiabotz.xyz/" />
+      <link id="icon" rel="icon" href="https://img1.pixhost.to/images/7125/620815169_desta.jpg" type="image/png">  
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+      <style>
+        :root {
+          --background-light: #f4f7f6;
+          --text-light: #333;
+          --primary-light: #007bff;
+          --secondary-light: #6c757d;
+          --card-bg-light: #ffffff;
+          --border-light: #e0e0e0;
+          --shadow-light: rgba(0, 0, 0, 0.08);
+          --input-bg-light: #f0f0f0;
+          --input-border-light: #ccc;
+          --code-bg-light: #f8f9fa;
+          --code-border-light: #dee2e6;
+          --success: #28a745;
+          --danger: #dc3545;
+          --warning: #ffc107;
+          --info: #17a2b8;
+          --text-gray: #6c757d;
+          --transition-speed: 0.3s ease-in-out;
+        }
+    
+        body.dark-theme {
+          --background-light: #2c3e50;
+          --text-light: #ecf0f1;
+          --primary-light: #3498db;
+          --secondary-light: #95a5a6;
+          --card-bg-light: #34495e;
+          --border-light: #4a627a;
+          --shadow-light: rgba(0, 0, 0, 0.3);
+          --input-bg-light: #4a627a;
+          --input-border-light: #6c757d;
+          --code-bg-light: #212529;
+          --code-border-light: #495057;
+        }
+    
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: var(--background-light);
+          color: var(--text-light);
+          line-height: 1.6;
+          transition: background-color var(--transition-speed), color var(--transition-speed);
+          overflow-x: hidden;
+        }
+    
+        #loading-screen {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--background-light);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          transition: opacity 0.5s ease-out;
+        }
+    
+        .loading-spinner-large {
+          border: 8px solid var(--border-light);
+          border-top: 8px solid var(--primary-light);
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 1.5s linear infinite;
+        }
+    
+        .loading-text {
+          margin-top: 20px;
+          font-size: 1.2em;
+          color: var(--text-light);
+        }
+    
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+    
+        .container {
+          max-width: 1200px;
+          margin: 20px auto;
+          padding: 0 20px;
+          display: none;
+        }
+    
+        .navbar {
+          background-color: var(--card-bg-light);
+          padding: 15px 20px;
+          box-shadow: 0 2px 4px var(--shadow-light);
+          transition: background-color var(--transition-speed);
+        }
+    
+        .navbar-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+    
+        .navbar-left {
+          display: flex;
+          align-items: center;
+          flex: 1;
+        }
+    
+        .navbar-right {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+    
+        .brand {
+          font-size: 1.8em;
+          font-weight: bold;
+          color: var(--primary-light);
+          text-decoration: none;
+          transition: color var(--transition-speed);
+          white-space: nowrap;
+          margin-right: 20px;
+        }
+    
+        .search-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          flex: 1;
+          max-width: 400px;
+        }
+    
+        .search-wrapper i {
+          position: absolute;
+          left: 10px;
+          color: var(--text-gray);
+          z-index: 1;
+        }
+    
+        #searchInput {
+          padding: 8px 10px 8px 35px;
+          border: 1px solid var(--border-light);
+          border-radius: 20px;
+          background-color: var(--input-bg-light);
+          color: var(--text-light);
+          transition: border-color var(--transition-speed), background-color var(--transition-speed);
+          width: 100%;
+        }
+    
+        #searchInput::placeholder {
+          color: var(--text-gray);
+        }
+    
+        .nav-icon {
+          background: none;
+          border: none;
+          font-size: 1.5em;
+          color: var(--text-light);
+          cursor: pointer;
+          transition: color var(--transition-speed);
+          padding: 8px;
+          border-radius: 50%;
+        }
+    
+        .nav-icon:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+    
+        .source-code-btn {
+          background-color: var(--primary-light);
+          color: white;
+          border: none;
+          padding: 8px 15px;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 0.9em;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: background-color var(--transition-speed);
+          text-decoration: none;
+        }
+    
+        .source-code-btn:hover {
+          background-color: #0056b3;
+        }
+    
+        .hero {
+          background-color: var(--card-bg-light);
+          padding: 40px;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px var(--shadow-light);
+          text-align: center;
+          margin-bottom: 30px;
+          transition: background-color var(--transition-speed);
+        }
+    
+        .hero .title-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 15px;
+        }
+    
+        .hero .icon-title {
+          font-size: 2.5em;
+          color: var(--primary-light);
+          margin-right: 15px;
+        }
+    
+        .hero h2 {
+          font-size: 2.5em;
+          color: var(--primary-light);
+          margin: 0;
+        }
+    
+        .hero p {
+          font-size: 1.1em;
+          color: var(--text-gray);
+          max-width: 800px;
+          margin: 20px auto;
+        }
+    
+        #apiLinks {
+          margin-top: 20px;
+          font-size: 1em;
+          color: var(--text-white-light);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+    
+        #apiLinks a {
+          color: var(--primary-light);
+          text-decoration: none;
+          transition: color var(--transition-speed);
+          display: flex;
+          align-items: center;
+          gap: 5px;
+        }
+    
+        #apiLinks a:hover {
+          text-decoration: underline;
+        }
+    
+        .base-url {
+          background-color: var(--code-bg-light);
+          border: 1px solid var(--code-border-light);
+          border-radius: 4px;
+          padding: 5px 10px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9em;
+        }
+    
+        .tabs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-bottom: 20px;
+          justify-content: center;
+        }
+    
+        .tab {
+          background-color: var(--card-bg-light);
+          color: var(--text-light);
+          padding: 10px 20px;
+          border: 1px solid var(--border-light);
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 0.9em;
+          transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed), transform 0.2s ease;
+        }
+    
+        .tab:hover {
+          background-color: var(--primary-light);
+          color: #fff;
+          border-color: var(--primary-light);
+          transform: translateY(-2px);
+        }
+    
+        .tab.active {
+          background-color: var(--primary-light);
+          color: #fff;
+          border-color: var(--primary-light);
+          box-shadow: 0 2px 5px rgba(0, 123, 255, 0.3);
+        }
+    
+        .api-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 20px;
+        }
+    
+        .api-card {
+          background-color: var(--card-bg-light);
+          padding: 25px;
+          border-radius: 8px;
+          box-shadow: 0 2px 5px var(--shadow-light);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          transition: background-color var(--transition-speed), transform 0.3s ease, box-shadow 0.3s ease;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeInSlideUp 0.6s forwards;
+        }
+    
+        @keyframes fadeInSlideUp {
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+    
+        .api-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 6px 12px var(--shadow-light);
+        }
+    
+        .api-info h3 {
+          margin-top: 0;
+          color: var(--primary-light);
+          font-size: 1.4em;
+        }
+    
+        .api-info p {
+          color: var(--text-gray);
+          font-size: 0.95em;
+          margin-bottom: 15px;
+        }
+    
+        .method-badge {
+          display: inline-block;
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 0.75em;
+          font-weight: bold;
+          color: #fff;
+          margin-right: 8px;
+          text-transform: uppercase;
+        }
+    
+        .method-get { background-color: var(--success); }
+        .method-post { background-color: var(--primary-light); }
+        .method-put { background-color: var(--warning); }
+        .method-delete { background-color: var(--danger); }
+    
+        .play-button {
+          background-color: var(--primary-light);
+          color: #fff;
+          border: none;
+          padding: 10px 15px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 0.9em;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: background-color var(--transition-speed), transform 0.2s ease;
+        }
+    
+        .play-button:hover {
+          background-color: #0056b3;
+          transform: translateY(-2px);
+        }
+    
+        .modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.6);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+    
+        .modal.active {
+          opacity: 1;
+          visibility: visible;
+        }
+    
+        .modal-dialog {
+          background-color: var(--card-bg-light);
+          border-radius: 8px;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+          width: 90%;
+          max-width: 700px;
+          transform: translateY(-50px);
+          opacity: 0;
+          transition: transform 0.3s ease, opacity 0.3s ease, background-color var(--transition-speed);
+        }
+    
+        .modal.active .modal-dialog {
+          transform: translateY(0);
+          opacity: 1;
+        }
+    
+        .modal-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          padding: 20px;
+          border-bottom: 1px solid var(--border-light);
+        }
+    
+        .modal-header h5 {
+          margin: 0;
+          font-size: 1.5em;
+          color: var(--primary-light);
+        }
+    
+        .modal-header span {
+          font-size: 0.9em;
+          color: var(--text-gray);
+        }
+    
+        .btn-close {
+          background: none;
+          border: none;
+          font-size: 1.8em;
+          color: var(--text-gray);
+          cursor: pointer;
+          transition: color 0.2s ease;
+        }
+    
+        .btn-close:hover {
+          color: var(--danger);
+        }
+    
+        .modal-body {
+          padding: 20px;
+        }
+    
+        .modal-body form {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 15px;
+          transition: max-height 0.5s ease-out, opacity 0.5s ease-out;
+          overflow: hidden;
+        }
+    
+        .modal-body.hide-form-elements form,
+        .modal-body.hide-form-elements #submitParamBtn {
+          max-height: 0;
+          opacity: 0;
+          pointer-events: none;
+          margin-bottom: 0;
+          padding-bottom: 0;
+        }
+    
+        .modal-body label {
+          font-weight: bold;
+          color: var(--text-light);
+        }
+    
+        .modal-body input[type="text"] {
+          padding: 10px;
+          border: 1px solid var(--input-border-light);
+          border-radius: 5px;
+          background-color: var(--input-bg-light);
+          color: var(--text-light);
+          transition: border-color var(--transition-speed), background-color var(--transition-speed);
+        }
+    
+        .modal-body input[type="text"]:focus {
+          outline: none;
+          border-color: var(--primary-light);
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+    
+        #submitParamBtn {
+          background-color: var(--success);
+          color: #fff;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1em;
+          transition: background-color var(--transition-speed), opacity 0.5s ease-out;
+        }
+    
+        #submitParamBtn:hover {
+          background-color: #218838;
+        }
+    
+        .loading-spinner {
+          border: 4px solid var(--border-light);
+          border-top: 4px solid var(--primary-light);
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+          animation: spin 1s linear infinite;
+          margin: 20px auto;
+          display: none;
+        }
+    
+        #apiResponseContent {
+          background-color: var(--code-bg-light);
+          border: 1px solid var(--code-border-light);
+          border-radius: 5px;
+          padding: 15px;
+          margin-top: 15px;
+          white-space: pre-wrap;
+          word-break: break-all;
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 0.9em;
+          max-height: 300px;
+          overflow-y: auto;
+          color: var(--text-light);
+          transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+    
+        #apiResponseContent.d-none {
+          display: none;
+        }
+    
+        .copy-section {
+          background-color: var(--input-bg-light);
+          border: 1px solid var(--input-border-light);
+          border-radius: 5px;
+          padding: 10px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-top: 15px;
+          opacity: 0;
+          max-height: 0;
+          overflow: hidden;
+          transition: opacity 0.3s ease, max-height 0.3s ease;
+        }
+    
+        .copy-section.active {
+          opacity: 1;
+          max-height: 60px;
+        }
+    
+        #copyEndpointText {
+          flex-grow: 1;
+          margin-right: 10px;
+          font-family: 'Courier New', Courier, monospace;
+          font-size: 0.9em;
+          color: var(--text-light);
+          word-break: break-all;
+        }
+    
+        .image-response, .video-response, .audio-response {
+          max-width: 100%;
+          height: auto;
+          display: block;
+          margin: 10px auto;
+          border-radius: 5px;
+        }
+    
+        footer {
+          background-color: var(--card-bg-light);
+          color: var(--text-gray);
+          text-align: center;
+          padding: 20px;
+          margin-top: 30px;
+          box-shadow: 0 -2px 4px var(--shadow-light);
+          transition: background-color var(--transition-speed);
+        }
+    
+        .contact a {
+          color: var(--text-gray);
+          font-size: 1.5em;
+          margin: 0 10px;
+          transition: color 0.2s ease;
+        }
+    
+        .contact a:hover {
+          color: var(--primary-light);
+        }
+    
+        .donation-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.7);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1001;
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+    
+        .donation-modal.active {
+          opacity: 1;
+          visibility: visible;
+        }
+    
+        .donation-modal-content {
+          background-color: var(--card-bg-light);
+          padding: 30px;
+          border-radius: 10px;
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+          text-align: center;
+          position: relative;
+          width: 90%;
+          max-width: 450px;
+          transform: scale(0.9);
+          opacity: 0;
+          transition: transform 0.3s ease, opacity 0.3s ease, background-color var(--transition-speed);
+        }
+    
+        .donation-modal.active .donation-modal-content {
+          transform: scale(1);
+          opacity: 1;
+        }
+    
+        .donation-modal-content h3 {
+          color: var(--primary-light);
+          margin-top: 0;
+          font-size: 1.8em;
+        }
+    
+        .donation-modal-content p {
+          color: var(--text-light);
+          margin-bottom: 20px;
+          font-size: 1.1em;
+        }
+    
+        .donation-modal-content img {
+          max-width: 80%;
+          height: auto;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          border: 1px solid var(--border-light);
+          cursor: zoom-in;
+          transition: transform 0.3s ease;
+        }
+    
+        .donation-modal-content img.zoomed {
+          transform: scale(1.5);
+          cursor: zoom-out;
+        }
+    
+        .donation-modal-content .close-btn {
+          position: absolute;
+          top: 15px;
+          right: 15px;
+          background: none;
+          border: none;
+          font-size: 1.8em;
+          color: var(--text-gray);
+          cursor: pointer;
+          transition: color 0.2s ease;
+        }
+    
+        .donation-modal-content .close-btn:hover {
+          color: var(--danger);
+        }
+    
+        @media (max-width: 768px) {
+          .navbar-container {
+            flex-direction: column;
+            gap: 10px;
+          }
+          .navbar-left {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            flex-wrap: wrap;
+          }
+          .search-wrapper {
+            margin-left: 0;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 100%;
+          }
+          #searchInput {
+            width: calc(100% - 45px);
+          }
+          .navbar-right {
+            width: 100%;
+            justify-content: center;
+          }
+          .hero {
+            padding: 30px 20px;
+          }
+          .hero h2 {
+            font-size: 2em;
+          }
+          .api-card {
+            padding: 20px;
+          }
+          .modal-dialog {
+            width: 95%;
+          }
+          #apiLinks {
+            flex-direction: column;
+          }
+        }
+    
+        @media (max-width: 480px) {
+          .brand {
+            font-size: 1.5em;
+          }
+          .hero h2 {
+            font-size: 1.8em;
+          }
+          .hero p {
+            font-size: 1em;
+          }
+          .tabs {
+            flex-direction: column;
+            align-items: center;
+          }
+          .tab {
+            width: 80%;
+          }
+          .api-card {
+            padding: 15px;
+          }
+          .api-info h3 {
+            font-size: 1.2em;
+          }
+          .play-button {
+            font-size: 0.8em;
+            padding: 8px 12px;
+          }
+          .modal-header h5 {
+            font-size: 1.2em;
+          }
+          .modal-header span {
+            font-size: 0.8em;
+          }
+          .donation-modal-content {
+            padding: 20px;
+          }
+          .donation-modal-content h3 {
+            font-size: 1.5em;
+          }
+          .donation-modal-content p {
+            font-size: 0.9em;
+          }
+          .source-code-btn {
+            font-size: 0.8em;
+            padding: 6px 12px;
+          }
+        }
+        
+        .source-code-btn2 {
+          background-color: var(--primary-light);
+          color: white;
+          border: none;
+          padding: 20px 36px;
+          border-radius: 16px;
+          cursor: pointer;
+          font-size: 0.95em;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+          position: relative;
+          transition: all 0.2s ease-in-out;
+          box-shadow: 5px 0 20px rgba(0, 150, 255, 0.8),
+                      10px 0 40px rgba(0, 150, 255, 0.6);
+        }
+    
+        .source-code-btn2:hover {
+          background-color: #3399ff;
+          box-shadow: 8px 0 25px rgba(0, 200, 255, 0.9),
+                      15px 0 50px rgba(0, 200, 255, 0.7);
+        }
+    
+        .source-code-btn2:active {
+          transform: translateY(-3px);
+          box-shadow: 8px 0 30px rgba(0, 200, 255, 1),
+                      8px 0 30px rgba(0, 200, 255, 0.9);
+        }
+      </style>
+    </head>
+    <body>
+      <div id="loading-screen">
+        <div class="loading-spinner-large"></div>
+        <div class="loading-text">Loading ...</div>
+      </div>
+      
+      <header class="navbar">
+        <div class="navbar-container">
+          <div class="navbar-left">
+            <span id="navname" class="brand">RESELLER GAMING DEV</span>
+            <div class="search-wrapper">
+              <i class="fas fa-search"></i>
+              <input type="text" id="searchInput" placeholder="Search endpoints...">
+            </div>
+          </div>
+          <div class="navbar-right">
+            <button id="themeToggle" class="nav-icon" aria-label="Toggle Theme">
+              <i class="fas fa-moon"></i> 
+            </button>
+            <a href="https://youtu.be/xvFZjo5PgG0?si=EH_KvVsImwFltZbH" class="source-code-btn" target="_blank">
+              <i class="fab fa-github"></i> Source Code
+            </a>
+          </div>
+        </div>
+      </header>
+    
+      <div class="container">
+        <section class="hero fade-in">
+          <div class="title-container">
+            <i class="fab fa-node-js icon-title"></i> 
+            <h2 id="apiTitle">Reseller Gaming Api</h2> 
+          </div>
+          <p>Simple and fast API for full-featured WhatsApp Bot integration with comprehensive documentation and easy-to-use endpoints. Explore our powerful tools to enhance your bot capabilities.</p> 
+            <div id="apiStats">
+              <span class="source-code-btn2" id="totalEndpoints">Loading endpoints...</span>
+              <br>
+              <span class="source-code-btn2" id="totalCategories" style="margin-center: 15px;"></span>
+            </div>
+            <a id="contactdev" href="#" title="Contact Dev">
+            </a>
+          </section>
+        </section>
+    
+        <section class="content">
+          <div class="tabs" id="tabs"></div>
+          <div id="api-list" class="api-list"></div>
+        </section>
+      </div>
+    
+      <div class="modal" id="apiResponseModal">
+        <div class="modal-dialog">
+          <div class="modal-header">
+            <div>
+              <h5 id="modalEndpointTitle"></h5> 
+              <span id="desc">Detailed information and example usage for this API endpoint.</span> 
+            </div>
+            <button id="btn-close" class="btn-close">×</button>
+          </div>
+          <div class="modal-body">
+            <div class="copy-section">
+              <span id="copyEndpointText">Your API Endpoint will appear here.</span>
+              <button id="copyBtn" class="play-button" style="padding: 6px 10px; font-size: 0.8rem;"> 
+                <i class="far fa-copy"></i> Copy
+              </button>
+            </div>
+            <form id="paramForm" style="margin-bottom: 0.75rem"></form> 
+            <button id="submitParamBtn" type="button">Submit Request</button>
+            <div id="apiResponseLoading" class="loading-spinner" style="display: none;"></div>
+            <div id="apiResponseContent" class="d-none"></div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="donation-modal" id="donationModal">
+        <div class="donation-modal-content">
+          <button class="close-btn" onclick="closeDonationModal()">×</button>
+          <h3>Support Developer RESELLER GAMING</h3>
+          <p>Api Ini Di Dukung Penuh Oleh RESELLER GAMING.<br>Jika Anda Ada Sedikit Rezeki, Silahkan Donate Reseller Gaming sebagai Support Developer.</p>
+          <img id="qrisImage" src="https://files.catbox.moe/b11rrr.jpg" alt="QRIS Donation">
+          <p>Setiap Donasi Menambah Dukungan!</p>
+        </div>
+      </div>
+    
+      <footer>
+        <div class="contact">
+          <a href="https://whatsapp.com/channel/0029VbAt2GM7j6g6d13Xx01X" aria-label="WhatsApp"><i class="fab fa-telegram"></i></a>
+          <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>&copy; <span id="currentYear"></span> RESELLER GAMING PROGRAMER AND AHMADI DEV - All rights reserved.</p>
+      </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loadingScreen = document.getElementById('loading-screen');
+      const container = document.querySelector('.container');
+      const tabsContainer = document.getElementById("tabs");
+      const apiList = document.getElementById("api-list");
+      const paramForm = document.getElementById("paramForm");
+      const submitBtn = document.getElementById("submitParamBtn");
+      const modal = document.getElementById("apiResponseModal");
+      const modalBody = modal.querySelector('.modal-body');
+      const modalEndpointTitle = document.getElementById("modalEndpointTitle");
+      const responseEl = document.getElementById("apiResponseContent");
+      const loadingEl = document.getElementById("apiResponseLoading");
+      const urlsSection = document.querySelector(".copy-section");
+      const copyBtn = document.getElementById("copyBtn");
+      const baseUrlText = document.getElementById("baseUrlText");
+      const themeToggle = document.getElementById("themeToggle");
+      const themeToggleIcon = themeToggle.querySelector("i");
+      const currentYearSpan = document.getElementById("currentYear");
+      const donationModal = document.getElementById('donationModal');
+      const totalEndpointsSpan = document.getElementById('totalEndpoints');
+      const totalCategoriesSpan = document.getElementById('totalCategories');
+    
+      let currentEndpoint = ""; 
+      let settings = {}, apis = {};
+    
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        document.body.classList.add(savedTheme);
+        if (savedTheme === 'dark-theme') {
+          themeToggleIcon.classList.remove('fa-moon');
+          themeToggleIcon.classList.add('fa-sun');
+        }
+      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark-theme');
+        themeToggleIcon.classList.remove('fa-moon');
+        themeToggleIcon.classList.add('fa-sun');
+      }
+    
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+          localStorage.setItem('theme', 'dark-theme');
+          themeToggleIcon.classList.remove('fa-moon');
+          themeToggleIcon.classList.add('fa-sun');
+        } else {
+          localStorage.setItem('theme', 'light-theme');
+          themeToggleIcon.classList.remove('fa-sun');
+          themeToggleIcon.classList.add('fa-moon');
+        }
+      });
+    
+      currentYearSpan.textContent = new Date().getFullYear();
+    
+      const hideLoadingScreen = () => {
+        setTimeout(() => {
+          container.style.display = 'block';
+          loadingScreen.style.opacity = '0';
+          setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            
+            if (!localStorage.getItem('donationShown')) {
+              donationModal.classList.add('active');
+              localStorage.setItem('donationShown', 'true');
+            }
+          }, 500); 
+        }, 1500)
+      }
+    
+      const closeModalAndCleanUp = () => {
+        modal.classList.remove('active');
+        setTimeout(() => {
+          paramForm.innerHTML = ""; 
+          responseEl.innerHTML = ""; 
+          responseEl.classList.add("d-none");
+          urlsSection.classList.remove("active");
+          modalBody.classList.remove('hide-form-elements'); 
+        }, 300); 
+      };
+    
+      window.closeDonationModal = function() {
+        donationModal.classList.remove('active');
+      };
+    
+      donationModal.addEventListener('click', function(e) {
+        if (e.target === this) closeDonationModal();
+      });
+    
+      const qrisImage = document.getElementById('qrisImage');
+      if (qrisImage) {
+        qrisImage.addEventListener('click', () => {
+          qrisImage.classList.toggle('zoomed');
+        });
+      }
+    
+      const navbarRight = document.querySelector('.navbar-right');
+      const donateBtn = document.createElement('button');
+      donateBtn.className = 'nav-icon';
+      donateBtn.setAttribute('aria-label', 'Support Developer');
+      donateBtn.innerHTML = '<i class="fas fa-heart"></i>';
+      donateBtn.addEventListener('click', () => {
+        donationModal.classList.add('active');
+      });
+      navbarRight.appendChild(donateBtn);
+    
+      function extractParams(path) {
+        if (!path || !path.includes('?')) return [];
+        
+        const paramString = path.split('?')[1];
+        if (!paramString) return [];
+        
+        const params = [];
+        const paramPairs = paramString.split('&');
+        
+        paramPairs.forEach(pair => {
+          const [name] = pair.split('=');
+          if (name) {
+            params.push({
+              name: name,
+              required: true,
+              placeholder: `Enter ${name}`,
+              description: name
+            });
+          }
+        });
+        
+        return params;
+      }
+    
+      function determineMethod(path) {
+        if (!path) return 'GET';
+        if (path.includes('/download/') || path.includes('/imagecreator/')) {
+          return 'GET';
+        }
+        
+        return 'GET';
+      }
+    
+      function countTotalEndpoints(apis) {
+        let total = 0;
+        for (const category in apis) {
+          if (apis.hasOwnProperty(category)) {
+            total += apis[category].length;
+          }
+        }
+        return total;
+      }
+    
+      try {
+        const settingsResponse = await fetch("/set");
+        if (!settingsResponse.ok) {
+          throw new Error(`Failed to fetch settings: ${settingsResponse.status} ${settingsResponse.statusText}`);
+        }
+        settings = await settingsResponse.json();
+    
+        const apisResponse = await fetch("/endpoints");
+        if (!apisResponse.ok) {
+          throw new Error(`Failed to fetch endpoints: ${apisResponse.status} ${apisResponse.statusText}`);
+        }
+        apis = await apisResponse.json();
+    
+        document.getElementById("navname").textContent = settings.creatorName || "RESELLER GAMING DEV";
+        document.getElementById("apiTitle").textContent = settings.apiTitle || "RESELLER GAMING Api's";
+        
+        const totalEndpoints = countTotalEndpoints(apis);
+        const totalCategories = Object.keys(apis).length;
+        
+        totalEndpointsSpan.textContent = `${totalEndpoints} Endpoints`;
+        totalCategoriesSpan.textContent = `${totalCategories} Categories`;
+        
+        document.getElementById("contactdev").href = window.location.origin || "#";
+        document.querySelector('footer .contact a[aria-label="WhatsApp"]').href = settings.whatsappLink || "https://wa.me/yourwhatsapplink";
+        document.querySelector('footer .contact a[aria-label="GitHub"]').href = settings.githubLink || "#";
+        document.querySelector('footer .contact a[aria-label="Instagram"]').href = settings.instagramLink || "#";
+        
+        if (Object.keys(apis).length > 0) {
+          renderTabs();
+          document.getElementById("searchInput").addEventListener("input", () => {
+            const activeTab = document.querySelector(".tab.active")?.textContent || "All";
+            renderApiCards(activeTab);
+          });
+        } else {
+          apiList.innerHTML = '<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">No API endpoints found. Please check your server configuration or the /endpoints response format.</p>';
+        }
+    
+      } catch (err) {
+        console.error("Error loading API settings or endpoints:", err);
+        document.getElementById("page").textContent = "API Documentation (Error)";
+        document.getElementById("navname").textContent = "RESELLER GAMING DEV";
+        document.getElementById("apiTitle").textContent = "Reseller Gaming Api's";
+        totalEndpointsSpan.textContent = "0 Endpoints";
+        totalCategoriesSpan.textContent = "0 Categories";
+        document.getElementById("contactdev").href = "#";
+        apiList.innerHTML = `<p style="text-align: center; color: var(--danger); margin-top: 2rem;">
+                               Failed to load API documentation: <br> <strong>${err.message}</strong> <br>
+                               Please ensure your server is running and the endpoints '/set' and '/endpoints' are accessible and return valid JSON.
+                             </p>`;
+      } finally {
+        hideLoadingScreen();
+      }
+    
+      function renderApiCards(category) {
+        apiList.innerHTML = "";
+        const filteredApis = category === "All" ? Object.values(apis).flat() : apis[category] || [];
+        
+        if (filteredApis.length === 0) {
+            apiList.innerHTML = `<p style="text-align: center; color: var(--text-gray); margin-top: 2rem;">
+                                    No endpoints available in this category.
+                                  </p>`;
+            return;
+        }
+        
+        const searchTerm = document.getElementById("searchInput")?.value?.toLowerCase() || "";
+        const visibleApis = filteredApis.filter(api =>
+          api.name?.toLowerCase().includes(searchTerm) ||
+          api.desc?.toLowerCase().includes(searchTerm)
+        );
+    
+        visibleApis.forEach((api, index) => {
+          const card = document.createElement("div"); 
+          card.className = "api-card";
+          card.style.animationDelay = `${index * 0.05}s`;
+    
+          const params = extractParams(api.path);
+          const method = determineMethod(api.path);
+    
+          const methodClass = `method-${method.toLowerCase()}`; 
+    
+          card.innerHTML = `
+            <div class="api-info">
+              <h3>
+                <span class="method-badge ${methodClass}">${method}</span> ${api.name || 'Untitled API'}
+              </h3>
+              <p>${api.desc || 'No description provided.'}</p>
+            </div>
+            <button class="play-button" 
+                    data-endpoint="${api.path || ''}" 
+                    data-name="${api.name || 'Untitled API'}" 
+                    data-description="${api.desc || 'No description provided.'}" 
+                    data-method="${method}" 
+                    data-params='${JSON.stringify(params)}'> 
+              Try It <i class="fas fa-arrow-right"></i>
+            </button>
+          `;
+          apiList.appendChild(card);
+        });
+      }
+    
+      function renderTabs() {
+        tabsContainer.innerHTML = "";
+        const categories = ["All", ...Object.keys(apis).filter(key => Array.isArray(apis[key]) && apis[key].length > 0)];
+        
+        if (categories.length <= 1 && categories.includes("All")) { 
+            tabsContainer.innerHTML = ''; 
+            return;
+        }
+    
+        categories.forEach(category => {
+          const tab = document.createElement("button");
+          tab.className = "tab";
+          tab.textContent = category;
+          tab.addEventListener("click", () => {
+            document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+            renderApiCards(category);
+          });
+          tabsContainer.appendChild(tab);
+        });
+    
+        if (tabsContainer.firstChild) {
+          tabsContainer.firstChild.classList.add("active");
+          renderApiCards(categories[0]);
+        }
+      }
+      
+      apiList.addEventListener("click", (e) => {
+        const button = e.target.closest(".play-button");
+        if (button) {
+          const fullPathWithParamsTemplate = button.dataset.endpoint; 
+          const name = button.dataset.name;
+          const description = button.dataset.description;
+          const method = button.dataset.method; 
+          const params = JSON.parse(button.dataset.params || "[]");
+    
+          currentEndpoint = fullPathWithParamsTemplate; 
+          modalEndpointTitle.innerHTML = `<span class="method-badge method-${method.toLowerCase()}">${method}</span> ${name}`;
+          document.getElementById("desc").textContent = description;
+          
+          const basePathForDisplay = currentEndpoint.split('?')[0]; 
+          document.getElementById("copyEndpointText").textContent = window.location.origin + basePathForDisplay;
+    
+          modalBody.classList.remove('hide-form-elements');
+          paramForm.innerHTML = "";
+          responseEl.innerHTML = "";
+          responseEl.classList.add("d-none");
+          urlsSection.classList.remove("active");
+    
+          if (params.length > 0) {
+            params.forEach(param => {
+              const label = document.createElement("label");
+              label.textContent = `${param.name}${param.required ? ' *' : ''}`;
+              label.htmlFor = `param-${param.name}`;
+              
+              const input = document.createElement("input");
+              input.type = "text";
+              input.id = `param-${param.name}`;
+              input.name = param.name;
+              input.placeholder = param.placeholder || `Enter ${param.name}`;
+              input.required = param.required !== false;
+              
+              paramForm.appendChild(label);
+              paramForm.appendChild(input);
+            });
+          } else {
+            paramForm.innerHTML = '<p>No parameters required for this endpoint.</p>';
+          }
+          
+          modal.classList.add("active");
+        }
+      });
+    
+      document.getElementById("btn-close").addEventListener("click", closeModalAndCleanUp);
+    
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) { 
+          closeModalAndCleanUp();
+        }
+      });
+    
+      submitBtn.addEventListener("click", async () => {
+        const formData = new FormData(paramForm);
+        let isValid = true;
+        
+        for (const [key, value] of formData.entries()) {
+          const input = paramForm.querySelector(`[name="${key}"]`);
+          if (input && input.required && !value) {
+            isValid = false;
+            input.style.borderColor = "var(--danger)";
+            input.focus();
+            loadingEl.style.display = "none";
+            responseEl.classList.remove("d-none");
+            responseEl.style.color = "var(--danger)";
+            responseEl.textContent = "Please fill in all required fields.";
+            return;
+          }
+        }
+    
+        modalBody.classList.add('hide-form-elements'); 
+        loadingEl.style.display = "block";
+        
+        responseEl.classList.add("d-none");
+        responseEl.innerHTML = "";
+        urlsSection.classList.remove("active");
+    
+        let newQueryParams = []; 
+        
+        for (const [key, value] of formData.entries()) {
+          const input = paramForm.querySelector(`[name="${key}"]`);
+          if (value) { 
+            newQueryParams.push(`${key}=${encodeURIComponent(value)}`);
+          }
+          if (input) input.style.borderColor = ""; 
+        }
+    
+        const basePath = currentEndpoint.split('?')[0]; 
+        let constructedUrl = window.location.origin + basePath;
+    
+        if (newQueryParams.length > 0) {
+            constructedUrl += '?' + newQueryParams.join('&');
+        }
+    
+        try {
+          document.getElementById("copyEndpointText").textContent = constructedUrl;
+          urlsSection.classList.add("active");
+    
+          const response = await fetch(constructedUrl); 
+          const contentType = response.headers.get("content-type");
+    
+          if (response.ok) {
+            if (contentType && contentType.includes("application/json")) {
+              const data = await response.json();
+              responseEl.textContent = JSON.stringify(data, null, 2);
+            } else if (contentType && contentType.includes("image")) {
+              const blob = await response.blob();
+              const imgUrl = URL.createObjectURL(blob);
+              responseEl.innerHTML = `<img src="${imgUrl}" class="image-response" alt="API Response Image">`;
+            } else if (contentType && contentType.includes("video")) {
+              const blob = await response.blob();
+              const videoUrl = URL.createObjectURL(blob);
+              responseEl.innerHTML = `<video controls src="${videoUrl}" class="video-response"></video>`;
+            } else if (contentType && contentType.includes("audio")) {
+              const blob = await response.blob();
+              const audioUrl = URL.createObjectURL(blob);
+              responseEl.innerHTML = `<audio controls src="${audioUrl}" class="audio-response"></audio>`;
+            } else {
+              const text = await response.text();
+              responseEl.textContent = text;
+            }
+            responseEl.style.color = "var(--text-primary)"; 
+    
+          } else {
+            const errorText = await response.text();
+            responseEl.textContent = `Error: ${response.status} - ${response.statusText}\n${errorText}`;
+            responseEl.style.color = "var(--danger)"; 
+          }
+        } catch (error) {
+          responseEl.textContent = `Error fetching data: ${error.message}`;
+          responseEl.style.color = "var(--danger)"; 
+          console.error("Fetch error:", error);
+        } finally {
+          loadingEl.style.display = "none";
+          responseEl.classList.remove("d-none");
+        }
+      });
+    
+      copyBtn.addEventListener('click', () => {
+        const textToCopy = document.getElementById("copyEndpointText").textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          const originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => {
+            copyBtn.innerHTML = originalText;
+          }, 2000);
+        }).catch(err => {
+          console.error('Failed to copy: ', err);
+        });
+      });
+    });
+    </script>
+    </body>
+    </html>
