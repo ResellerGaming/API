@@ -53,11 +53,11 @@ global.fetchJson = async (url, options = {}) => {
 global.apikey = process.env.APIKEY || null;
 global.totalreq = 0;
 const settings = {
-  creatorName: "FR3-NEWERA",
-  whatsappLink: "https://t.me/fr3newera",
-  apiTitle: "FR3 Api's",
+  creatorName: "RESMING-NEWERA",
+  whatsappLink: "https://whatsapp.com/channel/0029VbAt2GM7j6g6d13Xx01X",
+  apiTitle: "Reseller Gaming Api's",
   githubLink: "https://NvidiaFR3",
-  instagramLink: "https://instagram.com/rendyindrapratama3"
+  instagramLink: "https://www.instagram.com/my_m.ahmadi?igsh=MTJyendvczFvOHVjeQ=="
 };
 
 app.use((req, res, next) => {
