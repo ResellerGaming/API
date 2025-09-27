@@ -35,7 +35,7 @@ module.exports = {
   name: "SpamNGL",
   desc: "Spam pesan ke NGL (ngl.link)",
   category: "Tools",
-  path: "/tools/spamngl?link=&username&jumlah=&pesan&delay",
+  path: "/tools/spamngl?link=&jumlah=&pesan&delay",
   async run(req, res) {
     try {
       const { link, jumlah, pesan, delay = 1000 } = req.query;
