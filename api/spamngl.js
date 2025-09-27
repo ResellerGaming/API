@@ -35,7 +35,7 @@ module.exports = {
   name: "SpamNGL",
   desc: "Spam pesan ke NGL (ngl.link)",
   category: "Tools",
-  path: "/tools/spamngl",
+  path: "/tools/spamngl?link=&username&jumlah=&pesan&delay",
   async run(req, res) {
     try {
       const { link, jumlah, pesan, delay = 1000 } = req.query;
@@ -58,7 +58,7 @@ module.exports = {
 
       res.json({
         status: true,
-        creator: "Vanzz Ryuichi",
+        creator: "Reseller Gaming",
         query: { link, jumlah, pesan, delay },
         result,
       });
