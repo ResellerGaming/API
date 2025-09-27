@@ -45,7 +45,7 @@ module.exports = {
           status: false,
           creator: "Reseller Gaming",
           error: "Parameter 'link', 'jumlah', dan 'pesan' wajib diisi",
-          example: "/tools/spamngl?link=https://ngl.link/username&jumlah=3&pesan=halo&delay=2000",
+          example: "Pastikan link target sudah benar",
         });
       }
 
