@@ -81,7 +81,7 @@ module.exports = {
   name: 'ElevenLabs',
   desc: 'Generate TTS mp3 dari teks (voiceId otomatis)',
   category: 'AI',
-  path: '/ai/elevenlabs', // <-- tidak ada ? ataupun query
+  path: '/ai/elevenlabs?teks=', // <-- tidak ada ? ataupun query
   async run(req, res) {
     // hanya menerima ?teks=...
     const { teks } = req.query;
