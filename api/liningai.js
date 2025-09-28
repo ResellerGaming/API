@@ -1,7 +1,9 @@
+/* -------------- DEPENDENSI -------------- */
 const axios    = require('axios');
 const FormData = require('form-data');
 const fetch    = require('node-fetch');
 
+/* -------------- KONFIGURASI -------------- */
 const presets = [
   "none", "3d-model", "abstract", "advertising", "alien", "analog-film", "anime", "architectural",
   "artnouveau", "baroque", "black-white-film-portrait", "cinematic", "collage", "comic-book",
@@ -26,6 +28,7 @@ const sizes = {
   ultra    : "1536x1536"
 };
 
+/* -------------- FUNGSI UPLOAD -------------- */
 async function uploadBuffer(buffer, fileName = 'image.png') {
   const form = new FormData();
   form.append('files[]', buffer, { filename: fileName });
@@ -38,11 +41,19 @@ async function uploadBuffer(buffer, fileName = 'image.png') {
   return Array.isArray(data) ? data[0].url : data.files?.[0];
 }
 
+/* -------------- FUNGSI UTAMA -------------- */
 async function scrapeLinangData({ prompt, negativePrompt = '', preset = 'anime', orientation = 'portrait', seed = '' }) {
   if (!prompt) throw new Error('Prompt harus diisi!');
   if (!presets.includes(preset)) throw new Error('Preset tidak valid!');
   if (!sizes[orientation]) throw new Error('Ukuran tidak valid!');
 
+  /* 1. Ambil cookie & UA */
+  const home = await axios.get('https://linangdata.com/text-to-image-ai/', {
+    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
+  });
+  const cookie = home.headers['set-cookie']?.map(c => c.split(';')[0]).join('; ') || '';
+
+  /* 2. Kirim form */
   const form = new FormData();
   form.append('prompt', prompt);
   form.append('negativePrompt', negativePrompt);
@@ -50,20 +61,28 @@ async function scrapeLinangData({ prompt, negativePrompt = '', preset = 'anime',
   form.append('orientation', orientation);
   form.append('seed', seed);
 
-  const { data } = await axios.post('https://linangdata.com/text-to-image-ai/stablefusion-v2.php', form, {
-    headers: { ...form.getHeaders(), accept: 'application/json', 'x-requested-with': 'XMLHttpRequest' }
+  const res = await axios.post('https://linangdata.com/text-to-image-ai/stablefusion-v2.php', form, {
+    headers: {
+      ...form.getHeaders(),
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+      'Accept': 'application/json, text/plain, */*',
+      'X-Requested-With': 'XMLHttpRequest',
+      'Referer': 'https://linangdata.com/text-to-image-ai/',
+      'Cookie': cookie
+    },
+    timeout: 15000
   });
 
-  if (!data?.image) throw new Error('Response tidak berisi gambar');
+  if (!res.data?.image) throw new Error('Response tidak berisi gambar');
 
-  const buffer = Buffer.from(data.image, 'base64');
-  const url = await uploadBuffer(buffer, data.filename || 'linang.png');
+  const url = await uploadBuffer(Buffer.from(res.data.image, 'base64'), res.data.filename || 'linang.png');
   return { success: true, url, preset, size: sizes[orientation] };
 }
 
+/* -------------- ROUTE HANDLER -------------- */
 module.exports = {
   name: 'LinangAI',
-  desc: 'Generate AI image dari teks menggunakan LinangData (no disk write)',
+  desc: 'Generate AI image dari teks menggunakan LinangData (full-header, no-disk)',
   category: 'AI',
   path: '/ai/linang?prompt=',
   async run(req, res) {
