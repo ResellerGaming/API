@@ -1,8 +1,6 @@
-const axios   = require('axios');
-const fs      = require('fs');
-const path    = require('path');
-const FormData= require('form-data');
-const fetch   = require('node-fetch');
+const axios    = require('axios');
+const FormData = require('form-data');
+const fetch    = require('node-fetch');
 
 const presets = [
   "none", "3d-model", "abstract", "advertising", "alien", "analog-film", "anime", "architectural",
@@ -28,76 +26,53 @@ const sizes = {
   ultra    : "1536x1536"
 };
 
-async function uploadUguu(filePath) {
+async function uploadBuffer(buffer, fileName = 'image.png') {
   const form = new FormData();
-  form.append("files[]", fs.createReadStream(filePath));
-  const res = await fetch("https://uguu.se/upload", { method: "POST", body: form, headers: form.getHeaders() });
+  form.append('files[]', buffer, { filename: fileName });
+  const res = await fetch('https://uguu.se/upload', {
+    method: 'POST',
+    body: form,
+    headers: form.getHeaders()
+  });
   const data = await res.json();
   return Array.isArray(data) ? data[0].url : data.files?.[0];
 }
 
-async function scrapeLinangData({ prompt, negativePrompt = "", preset = "anime", orientation = "portrait", seed = "" }) {
-  if (!prompt) throw new Error("Prompt harus diisi!");
-  if (!presets.includes(preset)) throw new Error(`Preset tidak valid! Pilih salah satu: ${presets.join(", ")}`);
-  if (!sizes[orientation]) throw new Error(`Size tidak valid! Pilih salah satu: ${Object.keys(sizes).join(", ")}`);
+async function scrapeLinangData({ prompt, negativePrompt = '', preset = 'anime', orientation = 'portrait', seed = '' }) {
+  if (!prompt) throw new Error('Prompt harus diisi!');
+  if (!presets.includes(preset)) throw new Error('Preset tidak valid!');
+  if (!sizes[orientation]) throw new Error('Ukuran tidak valid!');
 
   const form = new FormData();
-  form.append("prompt", prompt);
-  form.append("negativePrompt", negativePrompt);
-  form.append("preset", preset);
-  form.append("orientation", orientation);
-  form.append("seed", seed);
+  form.append('prompt', prompt);
+  form.append('negativePrompt', negativePrompt);
+  form.append('preset', preset);
+  form.append('orientation', orientation);
+  form.append('seed', seed);
 
-  const res = await axios.post("https://linangdata.com/text-to-image-ai/stablefusion-v2.php", form, {
-    headers: { ...form.getHeaders(), accept: "application/json, text/plain, */*", "x-requested-with": "XMLHttpRequest", referer: "https://linangdata.com/text-to-image-ai/" }
+  const { data } = await axios.post('https://linangdata.com/text-to-image-ai/stablefusion-v2.php', form, {
+    headers: { ...form.getHeaders(), accept: 'application/json', 'x-requested-with': 'XMLHttpRequest' }
   });
 
-  const { filename, image } = res.data || {};
-  if (!image) throw new Error("Response tidak berisi gambar");
+  if (!data?.image) throw new Error('Response tidak berisi gambar');
 
-  const buffer = Buffer.from(image, "base64");
-  const filePath = path.join(process.cwd(), filename || `linang_${Date.now()}.png`);
-  fs.writeFileSync(filePath, buffer);
-  const url = await uploadUguu(filePath);
-  fs.unlinkSync(filePath);
-
+  const buffer = Buffer.from(data.image, 'base64');
+  const url = await uploadBuffer(buffer, data.filename || 'linang.png');
   return { success: true, url, preset, size: sizes[orientation] };
 }
 
-/* ---------- route handler ---------- */
 module.exports = {
-  name : "LinangAI",
-  desc : "Generate AI image dari teks menggunakan LinangData",
-  category: "AI",
-  path : "/ai/linang?prompt=",
+  name: 'LinangAI',
+  desc: 'Generate AI image dari teks menggunakan LinangData (no disk write)',
+  category: 'AI',
+  path: '/ai/linang?prompt=',
   async run(req, res) {
     try {
-      const { prompt, negative = "", preset = "anime", orientation = "portrait", seed = "" } = req.query;
+      const { prompt, negative = '', preset = 'anime', orientation = 'portrait', seed = '' } = req.query;
+      if (!prompt) return res.status(400).json({ status: false, error: 'Parameter prompt diperlukan' });
 
-      if (!prompt) {
-        return res.status(400).json({ status: false, error: "Parameter prompt diperlukan" });
-      }
-
-      const result = await scrapeLinangData({
-        prompt,
-        negativePrompt: negative,
-        preset,
-        orientation,
-        seed
-      });
-
-      if (!result.success) {
-        return res.status(500).json({ status: false, error: result.error });
-      }
-
-      res.json({
-        status: true,
-        creator: "Reseller Gaming",
-        prompt,
-        preset: result.preset,
-        size: result.size,
-        url: result.url
-      });
+      const result = await scrapeLinangData({ prompt, negativePrompt: negative, preset, orientation, seed });
+      res.json({ status: true, creator: 'RESMING-NEWERA', prompt, preset: result.preset, size: result.size, url: result.url });
     } catch (err) {
       res.status(500).json({ status: false, error: err.message });
     }
