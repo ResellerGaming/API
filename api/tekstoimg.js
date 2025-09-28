@@ -69,7 +69,7 @@ module.exports = {
   name : "LinangAI",
   desc : "Generate AI image dari teks menggunakan LinangData",
   category: "AI",
-  path : "/ai/linang",
+  path : "/ai/linang?prompt=",
   async run(req, res) {
     try {
       const { prompt, negative = "", preset = "anime", orientation = "portrait", seed = "" } = req.query;
