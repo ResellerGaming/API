@@ -69,7 +69,7 @@ export default {
   name: "LinangAI",
   desc: "Generate AI image dari teks menggunakan LinangData",
   category: "AI",
-  path: "/ai/linang?prompt=",
+  path: "/ai/linang",
   async run(req, res) {
     try {
       const { prompt, negative = "", preset = "anime", orientation = "portrait", seed = "" } = req.query;
