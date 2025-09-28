@@ -1,8 +1,8 @@
-import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
-import FormData from 'form-data';
-import fetch from 'node-fetch';
+const axios   = require('axios');
+const fs      = require('fs');
+const path    = require('path');
+const FormData= require('form-data');
+const fetch   = require('node-fetch');
 
 const presets = [
   "none", "3d-model", "abstract", "advertising", "alien", "analog-film", "anime", "architectural",
@@ -21,11 +21,11 @@ const presets = [
 ];
 
 const sizes = {
-  square: "1024x1024",
-  portrait: "768x1024",
+  square   : "1024x1024",
+  portrait : "768x1024",
   landscape: "1024x768",
-  widescreen: "1280x720",
-  ultra: "1536x1536"
+  widescreen:"1280x720",
+  ultra    : "1536x1536"
 };
 
 async function uploadUguu(filePath) {
@@ -65,11 +65,11 @@ async function scrapeLinangData({ prompt, negativePrompt = "", preset = "anime",
 }
 
 /* ---------- route handler ---------- */
-export default {
-  name: "LinangAI",
-  desc: "Generate AI image dari teks menggunakan LinangData",
+module.exports = {
+  name : "LinangAI",
+  desc : "Generate AI image dari teks menggunakan LinangData",
   category: "AI",
-  path: "/ai/linang",
+  path : "/ai/linang",
   async run(req, res) {
     try {
       const { prompt, negative = "", preset = "anime", orientation = "portrait", seed = "" } = req.query;
