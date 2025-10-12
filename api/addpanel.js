@@ -16,7 +16,7 @@ module.exports = {
       });
     }
 
-    const email = `${username}@mail.com`;
+    const email = `${username}@resellergaming.com`;
     const password = username;
 
     const headers = {
