@@ -20,7 +20,7 @@ module.exports = {
         },
         body: JSON.stringify({
           username,
-          email: `${username}@fr3.com`,
+          email: `${username}@resellergaming.com`,
           first_name: "admin",
           last_name: username,
           password: username,
