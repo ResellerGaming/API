@@ -149,7 +149,7 @@ module.exports = {
 
       // apikey check
       if (!apikey || !global.apikey || !global.apikey.includes(apikey)) {
-        return res.json({ status: false, error: "Silahkan Beli Apikey Ke https://t.me/fr3newera Ya, Harga Terjangkau." });
+        return res.json({ status: false, error: "Silahkan Beli Apikey Ke https://t.me.ResellerGamingoffcial Ya, Harga Terjangkau." });
       }
 
       if (!nomor) return res.json({ status: false, error: "Parameter 'nomor' wajib diisi" });
